@@ -35,7 +35,6 @@ class Tool(db.Model):
     last_deploy    = db.Column(db.DateTime,    nullable=True)
     sort_order     = db.Column(db.Integer,     default=0)
     owner          = db.Column(db.String(64),  default="")
-    tagsy          = db.Column(db.String(255), nullable=True)
 
     def to_dict(self):
         """Return a JSON-serialisable dict (matches the existing API shape)."""

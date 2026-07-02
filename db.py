@@ -102,7 +102,8 @@ def upsert_tool(data):
 
     t = Tool.query.get(tid)
     if t is None:
-        t = Tool(id=tid)
+        t = Tool()
+        t.id = tid
         if "sort_order" not in data:
             t.sort_order = _next_sort_order()
         db.session.add(t)
