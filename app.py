@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
-"""
-Deployr — Toolforge Manager Backend App
 
-Main entry point for the Flask-based backend server with stateless
-JWT-based Wikimedia OAuth 2.0 authentication.
-
-Authentication is handled entirely through signed JWTs stored in HTTP-only
-cookies — no server-side sessions or databases are used.
-
-Routes are organized as Blueprints under routes/:
-  routes/auth.py        — OAuth 2.0 login flow + jwt_required decorator
-  routes/config.py      — Toolforge SSH / config API
-  routes/webservice.py  — Toolforge webservice lifecycle API
-  routes/deploy.py      — Toolforge deployment pipeline API
-
-Business logic lives under services/:
-  services/auth_service.py   — PKCE, token exchange, JWT mint/verify
-  services/config_service.py — Config persistence
-  services/ssh_service.py    — SSH command execution
-  services/deploy_service.py — Deployment pipeline
-"""
 
 import os
 
@@ -36,9 +16,6 @@ from routes.webservice import webservice_bp
 from routes.deploy import deploy_bp
 from routes.tools import tools_bp
 
-# ---------------------------------------------------------------------------
-# App Setup
-# ---------------------------------------------------------------------------
 
 # Serve the Deployr frontend from the same origin as the API (no CORS, single
 # entry point). Static files (styles.css, app.js, data.js) resolve from "/".
@@ -52,11 +29,6 @@ app.register_blueprint(config_bp)
 app.register_blueprint(webservice_bp)
 app.register_blueprint(deploy_bp)
 app.register_blueprint(tools_bp)
-
-
-# ---------------------------------------------------------------------------
-# Home Route
-# ---------------------------------------------------------------------------
 
 @app.route("/")
 def index():
@@ -109,13 +81,6 @@ if __name__ == "__main__":
     parser.add_argument("--host",  type=str, default="127.0.0.1", help="Host address to bind")
     parser.add_argument("--debug", action="store_true",           help="Enable Flask debug mode")
     args = parser.parse_args()
-
-    if not auth_config.OAUTH_CLIENT_ID:
-        print("\033[33m⚠ OAUTH_CLIENT_ID is not set.\033[0m")
-    if not auth_config.OAUTH_CLIENT_SECRET:
-        print("\033[33m⚠ OAUTH_CLIENT_SECRET is not set.\033[0m")
-    if not auth_config.JWT_SECRET_KEY:
-        print("\033[33m⚠ JWT_SECRET_KEY is not set.\033[0m")
 
     print(f"Starting Deployr on http://{args.host}:{args.port}")
     app.run(host=args.host, port=args.port, debug=args.debug)
