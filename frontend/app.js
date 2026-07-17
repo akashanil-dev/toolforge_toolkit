@@ -573,11 +573,8 @@
 
   // ── Theme ──────────────────────────────────────────────
   function initTheme() {
-    // Codex is light-first; honor a saved override (or system dark preference).
     const saved = localStorage.getItem(LS.theme);
     if (saved) document.documentElement.dataset.theme = saved;
-    else if (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)
-      document.documentElement.dataset.theme = "dark";
     else document.documentElement.dataset.theme = "light";
   }
   function toggleTheme() {
