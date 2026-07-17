@@ -17,6 +17,7 @@ Decorator
 jwt_required  — apply to any route that requires authentication
 """
 
+import os
 import time
 import functools
 import urllib.parse
@@ -31,6 +32,7 @@ from flask import (
     render_template,
     make_response,
     g,
+    send_from_directory,
 )
 
 import configs.auth_config as auth_config
@@ -46,6 +48,7 @@ from services.auth_service import (
 )
 
 auth_bp = Blueprint("auth", __name__)
+FRONTEND = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 
 # ---------------------------------------------------------------------------
 # Cookie Security Flag
@@ -118,11 +121,11 @@ def login_page():
             return redirect("/")
         except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
             # Stale cookie — clear it and show the login page
-            response = make_response(render_template("login.html"))
+            response = make_response(send_from_directory(FRONTEND, "login.html"))
             response.delete_cookie("auth_token")
             return response
 
-    return render_template("login.html")
+    return send_from_directory(FRONTEND, "login.html")
 
 
 @auth_bp.route("/oauth/authorize")
